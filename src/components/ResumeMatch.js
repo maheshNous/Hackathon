@@ -6,12 +6,6 @@ import pdfToText from  'react-pdftotext'
 import PizZip from "pizzip";
 import Docxtemplater from "docxtemplater";
 import { JsonToTable } from "react-json-to-table";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import Button from "@material-ui/core/Button";
 
 
 const ResumeMatch = () => {
@@ -26,9 +20,6 @@ const ResumeMatch = () => {
   const [text, setText] = useState("");
   const [open, setOpen] = useState(false);
  
-  const handleToClose = () => {
-      setOpen(false);
-  };
   
   const onJDChange = (e) => {
     setJD(e.target.value);
@@ -41,13 +32,11 @@ const ResumeMatch = () => {
     setSelectedFile(event.target.files[0])
     const file = event.target.files[0]
     if (file.type == "application/pdf") {
-      //alert("pdf")
         pdfToText(file) 
             .then(text => setText(text))
             .catch(error => console.error("Failed to extract text from pdf"))
             console.log(text);
     } else if(file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
-      //alert("docs")
         const reader = new FileReader();
         reader.onload = async (event) => {
           const content = event.target.result;
@@ -57,7 +46,7 @@ const ResumeMatch = () => {
         };
         reader.readAsBinaryString(file);
     } else {
-      setOpen(true);
+      alert("Please upload only .docx and .pdf files...!");
     }
     
 };
@@ -117,20 +106,6 @@ const handleSubmit = () => {
            <JsonToTable json={aiResponse} />
       </div>     
    }
-   <Dialog open={open} onClose={handleToClose}>
-      <DialogTitle><h2>{"Warning!"}</h2></DialogTitle>
-      <DialogContent>
-          <DialogContentText>
-            <h3>Please upload only .pdf and .docx files...!</h3>
-          </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-          <Button onClick={handleToClose}
-              color="primary" autoFocus>
-              Close
-          </Button>
-      </DialogActions>
-  </Dialog>
 </div>
 
   );
